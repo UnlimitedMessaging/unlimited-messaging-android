@@ -7,6 +7,11 @@ updates:
     groups:
       androidx:
         patterns: ["androidx.*"]
+    # Major versions (AGP, OkHttp, Kotlin...) need a deliberate migration:
+    # they are upgraded by hand, not by a weekly pull request.
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
   - package-ecosystem: github-actions
     directory: /
     schedule:
