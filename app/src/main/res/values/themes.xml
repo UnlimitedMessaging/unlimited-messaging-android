@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Window theme only: every screen is drawn by Compose (ui/theme/Theme.kt).
+         The background matches the page color so there is no flash at launch. -->
+    <style name="Theme.Gateway" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/um_off_white</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+</resources>

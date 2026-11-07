@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Same tokens as ui/theme/Theme.kt, for the window and the launcher icon. -->
+    <color name="um_off_white">#FFF8FAFB</color>
+    <color name="um_page_dark">#FF09090B</color>
+    <color name="ic_launcher_background">#FFFFFFFF</color>
+</resources>
