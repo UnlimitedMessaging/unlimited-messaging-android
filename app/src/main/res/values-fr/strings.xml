@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Connexion -->
+    <string name="sign_in_title">Passerelle SMS</string>
+    <string name="sign_in_methods">Email, Google ou GitHub, comme sur le site.</string>
+    <string name="sign_in_explainer">Transformez ce téléphone en passerelle SMS pour votre compte : les messages mis en file depuis l\'API ou le site partent des cartes SIM de ce téléphone, et les SMS qu\'il reçoit sont transmis à votre compte.</string>
+    <string name="sign_in_button">Se connecter</string>
+    <string name="sign_in_error_network">Impossible de joindre le serveur. Vérifiez votre connexion et réessayez.</string>
+    <string name="sign_in_error_no_browser">Aucun navigateur n\'est installé pour ouvrir la page de connexion.</string>
+    <string name="sign_in_error_rejected">La connexion a été refusée ou annulée.</string>
+    <string name="sign_in_error_invalid_redirect">La connexion n\'a pas pu aboutir. Réessayez.</string>
+    <string name="sign_in_error_session_expired">Votre session a pris fin. Reconnectez-vous pour relancer la passerelle.</string>
+
+    <!-- Passerelle -->
+    <string name="gateway_title">Passerelle</string>
+    <string name="gateway_online">Connectée. Les messages en file partent immédiatement.</string>
+    <string name="gateway_offline">Hors ligne. Nouvelle tentative automatique.</string>
+    <string name="gateway_connecting">Connexion…</string>
+    <string name="gateway_stopped">Arrêtée.</string>
+    <string name="gateway_paused">En pause. Les messages attendent sur le serveur jusqu\'à sa réactivation.</string>
+    <string name="gateway_needs_setup">Autorisez l\'accès aux SMS ci-dessous pour démarrer.</string>
+
+    <!-- Configuration -->
+    <string name="setup_title">Configuration</string>
+    <string name="setup_done">OK</string>
+    <string name="setup_sms">Accès aux SMS et aux SIM</string>
+    <string name="setup_sms_detail">Obligatoire. Envoyer les SMS en file, transmettre ceux reçus, lister vos cartes SIM.</string>
+    <string name="setup_battery">Batterie sans restriction</string>
+    <string name="setup_battery_detail">Recommandé. Empêche Android de mettre la passerelle en pause écran éteint.</string>
+    <string name="setup_notifications">Notifications</string>
+    <string name="setup_notifications_detail">Recommandé. Affiche l\'état de la passerelle et vous prévient si elle s\'arrête.</string>
+    <string name="setup_phone_numbers">Numéros de téléphone</string>
+    <string name="setup_phone_numbers_detail">Facultatif. Lit le numéro de chaque SIM quand l\'opérateur le fournit.</string>
+    <string name="setup_manufacturer">Le gestionnaire de batterie du fabricant</string>
+    <string name="setup_manufacturer_detail">Ce fabricant arrête les applications en arrière-plan plus agressivement qu\'Android. Autorisez le démarrage automatique et l\'exécution en arrière-plan de cette application.</string>
+    <string name="action_allow">Autoriser</string>
+    <string name="action_open_settings">Ouvrir les réglages</string>
+    <string name="action_open_guide">Guide</string>
+    <string name="action_app_settings">Réglages de l\'application</string>
+
+    <!-- Cartes SIM -->
+    <string name="sims_title">Cartes SIM</string>
+    <string name="sims_empty">Aucune carte SIM active.</string>
+    <string name="sims_slot">SIM %1$d</string>
+    <string name="sims_esim">eSIM</string>
+    <string name="sims_number_unknown">Numéro non fourni par l\'opérateur</string>
+    <string name="sims_active">Active</string>
+    <string name="sims_inactive">Inactive</string>
+    <string name="sims_not_registered">Non enregistrée</string>
+
+    <!-- Activité -->
+    <string name="activity_title">Activité récente</string>
+    <string name="activity_empty">Rien pour l\'instant. Les messages envoyés et reçus par ce téléphone apparaîtront ici.</string>
+    <string name="status_sending">Envoi</string>
+    <string name="status_sent">Envoyé</string>
+    <string name="status_delivered">Distribué</string>
+    <string name="status_undeliverable">Non distribuable</string>
+    <string name="status_failed">Échec</string>
+    <string name="status_received">Reçu</string>
+    <string name="status_forwarded">Transmis</string>
+
+    <string name="sign_out">Se déconnecter</string>
+    <string name="version">Version %1$s</string>
+
+    <!-- Notifications -->
+    <string name="notification_channel_status">État de la passerelle</string>
+    <string name="notification_channel_status_description">La notification permanente qu\'Android impose pendant que la passerelle tourne.</string>
+    <string name="notification_channel_alerts">Alertes</string>
+    <string name="notification_status_title">Passerelle SMS</string>
+    <plurals name="notification_status_online">
+        <item quantity="one">Connectée, %d carte SIM</item>
+        <item quantity="many">Connectée, %d cartes SIM</item>
+        <item quantity="other">Connectée, %d cartes SIM</item>
+    </plurals>
+    <string name="notification_status_offline">Hors ligne, nouvelle tentative</string>
+    <string name="notification_status_connecting">Connexion…</string>
+    <string name="notification_session_expired_title">Passerelle arrêtée</string>
+    <string name="notification_session_expired_text">Vous avez été déconnecté. Ouvrez l\'application et reconnectez-vous pour reprendre l\'envoi des SMS.</string>
+    <string name="notification_restart_title">La passerelle a besoin de vous</string>
+    <string name="notification_restart_text">Android a arrêté la passerelle. Ouvrez l\'application pour la relancer, et autorisez la batterie sans restriction pour éviter que ça se reproduise.</string>
+</resources>

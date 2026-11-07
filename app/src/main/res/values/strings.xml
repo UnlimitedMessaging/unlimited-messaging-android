@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name" translatable="false">Unlimited Messaging</string>
+
+    <!-- Sign-in -->
+    <string name="sign_in_title">SMS gateway</string>
+    <string name="sign_in_methods">Email, Google or GitHub, as on the website.</string>
+    <string name="sign_in_explainer">Turn this phone into an SMS gateway for your account: messages queued from the API or the website are sent from this phone\'s SIM cards, and SMS it receives are forwarded to your account.</string>
+    <string name="sign_in_button">Sign in</string>
+    <string name="sign_in_error_network">Could not reach the server. Check your connection and try again.</string>
+    <string name="sign_in_error_no_browser">No browser is installed to open the sign-in page.</string>
+    <string name="sign_in_error_rejected">Sign-in was refused or cancelled.</string>
+    <string name="sign_in_error_invalid_redirect">Sign-in could not be completed. Please try again.</string>
+    <string name="sign_in_error_session_expired">Your session ended. Sign in again to resume the gateway.</string>
+
+    <!-- Gateway -->
+    <string name="gateway_title">Gateway</string>
+    <string name="gateway_online">Connected. Queued messages are sent right away.</string>
+    <string name="gateway_offline">Offline. Retrying automatically.</string>
+    <string name="gateway_connecting">Connecting…</string>
+    <string name="gateway_stopped">Stopped.</string>
+    <string name="gateway_paused">Paused. Messages wait on the server until you switch it back on.</string>
+    <string name="gateway_needs_setup">Allow SMS access below to start.</string>
+
+    <!-- Setup -->
+    <string name="setup_title">Setup</string>
+    <string name="setup_done">Done</string>
+    <string name="setup_sms">SMS and SIM access</string>
+    <string name="setup_sms_detail">Required. Send queued SMS, forward received ones, list your SIM cards.</string>
+    <string name="setup_battery">Unrestricted battery</string>
+    <string name="setup_battery_detail">Recommended. Keeps Android from pausing the gateway when the screen is off.</string>
+    <string name="setup_notifications">Notifications</string>
+    <string name="setup_notifications_detail">Recommended. Shows the gateway status, and warns you if it stops.</string>
+    <string name="setup_phone_numbers">Phone numbers</string>
+    <string name="setup_phone_numbers_detail">Optional. Reads each SIM\'s number when your carrier provides it.</string>
+    <string name="setup_manufacturer">Your phone\'s own battery manager</string>
+    <string name="setup_manufacturer_detail">This manufacturer stops background apps more aggressively than Android does. Allow this app to auto-start and run in the background.</string>
+    <string name="action_allow">Allow</string>
+    <string name="action_open_settings">Open settings</string>
+    <string name="action_open_guide">Guide</string>
+    <string name="action_app_settings">App settings</string>
+
+    <!-- SIM cards -->
+    <string name="sims_title">SIM cards</string>
+    <string name="sims_empty">No active SIM card found.</string>
+    <string name="sims_slot">SIM %1$d</string>
+    <string name="sims_esim">eSIM</string>
+    <string name="sims_number_unknown">Number not provided by the carrier</string>
+    <string name="sims_active">Active</string>
+    <string name="sims_inactive">Inactive</string>
+    <string name="sims_not_registered">Not registered</string>
+
+    <!-- Activity -->
+    <string name="activity_title">Recent activity</string>
+    <string name="activity_empty">Nothing yet. Messages this phone sends and receives will show up here.</string>
+    <string name="status_sending">Sending</string>
+    <string name="status_sent">Sent</string>
+    <string name="status_delivered">Delivered</string>
+    <string name="status_undeliverable">Undeliverable</string>
+    <string name="status_failed">Failed</string>
+    <string name="status_received">Received</string>
+    <string name="status_forwarded">Forwarded</string>
+
+    <string name="sign_out">Sign out</string>
+    <string name="version">Version %1$s</string>
+
+    <!-- Notifications -->
+    <string name="notification_channel_status">Gateway status</string>
+    <string name="notification_channel_status_description">The permanent notification Android requires while the gateway runs.</string>
+    <string name="notification_channel_alerts">Alerts</string>
+    <string name="notification_status_title">SMS gateway</string>
+    <plurals name="notification_status_online">
+        <item quantity="one">Connected, %d SIM card</item>
+        <item quantity="other">Connected, %d SIM cards</item>
+    </plurals>
+    <string name="notification_status_offline">Offline, retrying</string>
+    <string name="notification_status_connecting">Connecting…</string>
+    <string name="notification_session_expired_title">Gateway stopped</string>
+    <string name="notification_session_expired_text">You were signed out. Open the app and sign in again to resume sending SMS.</string>
+    <string name="notification_restart_title">Gateway needs you</string>
+    <string name="notification_restart_text">Android stopped the gateway. Open the app to restart it, and allow unrestricted battery so it does not happen again.</string>
+</resources>
