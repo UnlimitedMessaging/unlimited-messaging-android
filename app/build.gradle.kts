@@ -39,6 +39,9 @@ android {
 
         buildConfigField("String", "OAUTH_CLIENT_ID", quoted(prop("um.oauthClientId")))
         buildConfigField("String", "OAUTH_SCOPE", quoted(prop("um.oauthScope")))
+        // Usage and diagnostic events to the Unlimited Messaging API (see README, "Privacy").
+        // -Pum.telemetryEnabled=false builds an app that never records or sends any, and hides the switch.
+        buildConfigField("boolean", "TELEMETRY_ENABLED", prop("um.telemetryEnabled", "true").toBooleanStrict().toString())
     }
 
     signingConfigs {

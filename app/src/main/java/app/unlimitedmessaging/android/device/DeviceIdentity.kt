@@ -27,5 +27,6 @@ class DeviceIdentity(
         androidSdk = Build.VERSION.SDK_INT,
         appVersion = BuildConfig.VERSION_NAME,
         sims = sims,
+        telemetry = BuildConfig.TELEMETRY_ENABLED && preferences.telemetryEnabled.value,
     )
 }

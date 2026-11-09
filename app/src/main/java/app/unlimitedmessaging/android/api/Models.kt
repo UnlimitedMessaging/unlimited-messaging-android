@@ -1,6 +1,7 @@
 package app.unlimitedmessaging.android.api
 
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonObject
 
 /*
  * Request and response bodies of the device endpoints. The authoritative
@@ -17,6 +18,11 @@ data class RegisterDeviceRequest(
     val androidSdk: Int,
     val appVersion: String,
     val sims: List<SimPayload>,
+    /**
+     * Whether the user lets the app send usage and diagnostic events
+     * (`POST /device/events`). False when the build has telemetry disabled.
+     */
+    val telemetry: Boolean? = null,
 )
 
 @Serializable
@@ -88,4 +94,21 @@ data class InboundSms(
     val receivedAt: String,
     /** Stable across retries of the same SMS: the server ignores a second copy. */
     val dedupKey: String,
+)
+
+@Serializable
+data class DeviceEventsRequest(
+    /** At most 50 per request. */
+    val events: List<DeviceEvent>,
+)
+
+/** A usage or diagnostic event. See docs/API_CONTRACT.md for the allowed names and properties. */
+@Serializable
+data class DeviceEvent(
+    val event: String,
+    /** ISO-8601 instant at which it happened on the phone. */
+    val occurredAt: String,
+    /** Random, the server ignores a second copy (a retried batch). */
+    val uuid: String,
+    val properties: JsonObject,
 )

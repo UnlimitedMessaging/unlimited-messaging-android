@@ -11,6 +11,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
 import app.unlimitedmessaging.android.AppContainer
+import app.unlimitedmessaging.android.analytics.OfflineEpisodeTracker
 import app.unlimitedmessaging.android.api.DeviceRemovedException
 import app.unlimitedmessaging.android.api.OutboxMessage
 import app.unlimitedmessaging.android.api.UnauthorizedException
@@ -117,6 +118,7 @@ class GatewayService : LifecycleService() {
 
     private suspend fun runLoop() {
         val backoff = Backoff()
+        val offline = OfflineEpisodeTracker()
         container.gatewayStatus.connecting()
 
         while (coroutineContext.isActive) {
@@ -126,9 +128,13 @@ class GatewayService : LifecycleService() {
                 return
             }
             try {
-                if (registrationNeeded.getAndSet(false)) register()
+                if (registrationNeeded.getAndSet(false)) {
+                    register()
+                    reportRecovery(offline)
+                }
                 container.gatewayStatus.online()
                 val messages = poll() ?: continue
+                reportRecovery(offline)
                 backoff.reset()
                 container.gatewayStatus.online()
                 if (messages.isNotEmpty()) send(messages)
@@ -149,12 +155,18 @@ class GatewayService : LifecycleService() {
                 // Register again after any failure: cheap, and covers a
                 // registration that was the request that failed.
                 registrationNeeded.set(true)
+                offline.onFailure(e, System.currentTimeMillis())
                 val delay = backoff.next()
                 Log.w(TAG, "Outbox unreachable (${e.message}), retrying in ${delay / 1000}s")
                 container.gatewayStatus.offline(e.message ?: e.javaClass.simpleName)
                 withTimeoutOrNull(delay) { wakeUp.receive() }
             }
         }
+    }
+
+    /** One telemetry event per outage, when the server answers again. */
+    private fun reportRecovery(offline: OfflineEpisodeTracker) {
+        offline.onContact(System.currentTimeMillis())?.let(container.telemetry::offlineEpisode)
     }
 
     /** The current outbox request, cancelled to register again right away. Null when cancelled that way. */

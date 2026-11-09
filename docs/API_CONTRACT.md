@@ -17,6 +17,7 @@ other follows in the same release.
   - [`GET /device/outbox`](#get-deviceoutbox)
   - [`POST /device/messages/{id}/status`](#post-devicemessagesidstatus)
   - [`POST /device/inbound`](#post-deviceinbound)
+  - [`POST /device/events`](#post-deviceevents)
   - [`DELETE /device`](#delete-device)
 - [Message statuses](#message-statuses)
 - [Error codes](#error-codes)
@@ -132,7 +133,8 @@ Request:
       "phoneNumber": null,
       "countryIso": "FR"
     }
-  ]
+  ],
+  "telemetry": true
 }
 ```
 
@@ -142,6 +144,7 @@ Request:
 | `sims[].subscriptionId` | Android's id for the SIM on this phone. Stable when the same SIM is removed and reinserted; a new SIM gets a new id. |
 | `sims[].slotIndex` | 0-based physical slot, `-1` for an eSIM not tied to one. |
 | `sims[].phoneNumber` | **Often null**: many carriers do not expose the number to the phone. The account is then created without `externalIdentifier`, and the website asks the user for it. |
+| `telemetry` | Optional. Whether the user leaves "Share usage statistics" on (default `true`); `false` when they switched it off or the build has telemetry disabled (`um.telemetryEnabled=false`). The app registers again when the user flips it while the gateway runs. The server may use it to ignore `POST /device/events` from a device that opted out. Absent from older app versions. |
 
 Response `200`:
 
@@ -262,6 +265,63 @@ Request:
 Response: `204`. The server stores it like any inbound message
 (`direction = IN`, `channel = SMS`, `interlocutor = from`, `isGroup = false`,
 `conversationId = null`) and emits `message.received`.
+
+### `POST /device/events`
+
+Usage and diagnostic events, which the server forwards to its product
+analytics. Sent in the background by a WorkManager job, only while signed in
+and only if the user left "Share usage statistics" on. The server adds the
+device's manufacturer, model, Android version and app version from the last
+registration: the app does not repeat them.
+
+Request (at most **50** events per call):
+
+```json
+{
+  "events": [
+    {
+      "event": "android_app_opened",
+      "occurredAt": "2026-11-09T08:12:03.410Z",
+      "uuid": "5d0c8f43-2a7e-4f43-9a7f-3f2c1d2b9e10",
+      "properties": {
+        "signed_in": true,
+        "gateway_enabled": true,
+        "connection": "online",
+        "setup_complete": true
+      }
+    }
+  ]
+}
+```
+
+| Field | Notes |
+| --- | --- |
+| `event` | One of the names below. The server drops any other. |
+| `occurredAt` | When it happened on the phone. Events can arrive days late (offline phone, crash reported on the next launch). |
+| `uuid` | Random per event. A batch is resent after a network error, so the server deduplicates on it. |
+| `properties` | Exactly the keys listed for the event. |
+
+| `event` | `properties` |
+| --- | --- |
+| `android_app_opened` | `signed_in` (bool), `gateway_enabled` (bool), `connection` (`stopped` \| `connecting` \| `online` \| `offline`), `setup_complete` (bool). At most once per 30 minutes. |
+| `android_permission_result` | `group` (`sms` \| `phone_numbers` \| `notifications`), `granted` (bool), `permanently_denied` (bool). |
+| `android_setup_step_completed` | `step` (`sms` \| `battery` \| `notifications` \| `phone_numbers`). Also for a step done from system settings. |
+| `android_setup_step_revoked` | `step` (same values). |
+| `android_setup_completed` | `minutes_since_sign_in` (integer, or `null` for a session started before this version). Once per installation. |
+| `android_service_start_blocked` | `trigger` (`ui` \| `boot` \| `watchdog` \| `sign_in`), `background_restricted` (bool). |
+| `android_gateway_offline_episode` | `duration_s` (integer), `error_class` (exception simple class name), `attempts` (integer). One per outage, sent when the gateway reaches the server again. |
+| `android_crash` | `exception_class` (simple class name of the root cause), `app_frames` (array of up to 5 `Class#method` strings from the app's own package), `in_service` (bool). Never the exception message. |
+
+Response: `204`. The app's handling differs from the reports above, because
+an event is never worth disrupting the gateway:
+
+| Status | App behavior |
+| --- | --- |
+| `204` | Sent, removed from the queue. |
+| `401` | Usual refresh. If the session ended, the queue is dropped. |
+| `404`, `410` | The whole queue is dropped silently (server without the endpoint, or events no longer wanted). A `410` here does **not** sign the phone out. |
+| other `4xx` | That batch is dropped. |
+| `408`, `425`, `429`, `5xx`, network error | Retried with backoff. Events older than 7 days, or beyond the 100 most recent, are dropped on the phone. |
 
 ### `DELETE /device`
 

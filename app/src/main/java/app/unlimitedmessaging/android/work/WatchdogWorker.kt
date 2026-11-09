@@ -6,6 +6,7 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
+import app.unlimitedmessaging.android.analytics.StartTrigger
 import app.unlimitedmessaging.android.service.GatewayController
 import java.util.concurrent.TimeUnit
 
@@ -19,7 +20,7 @@ import java.util.concurrent.TimeUnit
 class WatchdogWorker(context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {
 
     override suspend fun doWork(): Result {
-        GatewayController.ensureRunning(applicationContext)
+        GatewayController.ensureRunning(applicationContext, StartTrigger.WATCHDOG)
         return Result.success()
     }
 

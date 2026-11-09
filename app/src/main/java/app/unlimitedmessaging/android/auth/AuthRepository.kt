@@ -141,6 +141,7 @@ class AuthRepository(
                 ),
             )
             preferences.setGatewayEnabled(true)
+            preferences.signedInAt = System.currentTimeMillis()
             GatewayNotifications.cancelSessionExpired(appContext)
             _error.value = null
             _state.value = AuthState.SignedIn

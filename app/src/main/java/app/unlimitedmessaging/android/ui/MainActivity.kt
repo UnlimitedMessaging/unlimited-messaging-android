@@ -27,7 +27,7 @@ class MainActivity : ComponentActivity() {
     private val viewModel: MainViewModel by viewModels()
 
     private val permissionRequest =
-        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { viewModel.refresh() }
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions(), ::onPermissionsResult)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,6 +42,7 @@ class MainActivity : ComponentActivity() {
                         versionName = BuildConfig.VERSION_NAME,
                         actions = HomeActions(
                             setGatewayEnabled = viewModel::setGatewayEnabled,
+                            setTelemetryEnabled = viewModel::setTelemetryEnabled,
                             grantSms = { request(Permissions.SMS) },
                             grantPhoneNumbers = { request(Permissions.PHONE_NUMBERS) },
                             grantNotifications = { request(Permissions.NOTIFICATIONS) },
@@ -85,6 +86,29 @@ class MainActivity : ComponentActivity() {
 
     private fun request(permissions: Array<String>) {
         if (permissions.isNotEmpty()) permissionRequest.launch(permissions)
+    }
+
+    /**
+     * The result map is keyed by the permissions that were requested, which
+     * tells which group of the checklist it was. Empty when the request was
+     * interrupted (screen rotated): nothing to report then.
+     */
+    private fun onPermissionsResult(results: Map<String, Boolean>) {
+        val group = when {
+            results.isEmpty() -> null
+            Permissions.SMS.any(results::containsKey) -> "sms"
+            Permissions.PHONE_NUMBERS.any(results::containsKey) -> "phone_numbers"
+            Permissions.NOTIFICATIONS.any(results::containsKey) -> "notifications"
+            else -> null
+        }
+        if (group == null) {
+            viewModel.refresh()
+            return
+        }
+        val denied = results.filterValues { !it }.keys
+        // After a denial, Android stops offering the dialog once it no longer wants a rationale shown.
+        val permanentlyDenied = denied.isNotEmpty() && denied.any { !shouldShowRequestPermissionRationale(it) }
+        viewModel.onPermissionResult(group, granted = denied.isEmpty(), permanentlyDenied = permanentlyDenied)
     }
 
     private fun open(intent: Intent) {
