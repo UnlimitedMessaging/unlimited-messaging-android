@@ -1,4 +1,41 @@
-<h1 align="center">Unlimited Messaging for Android</h1>
+<!-- um-header:start (shared across UnlimitedMessaging repos, keep in sync) -->
+<p align="center">
+  <a href="https://unlimitedmessaging.app?utm_source=github&utm_medium=readme&utm_campaign=unlimited-messaging-android"><img src="https://unlimitedmessaging.app/assets/favicon/android-chrome-512x512.png" width="72" height="72" alt="Unlimited Messaging logo"></a>
+</p>
+
+<h1 align="center">Unlimited Messaging · Android SMS gateway</h1>
+
+<p align="center">
+  <b>WhatsApp, email and SMS from your own number, mailbox and Android phone, in one API request.</b><br>
+  Free plan, unlimited messages. REST API, SDKs, n8n and an MCP server for Claude, ChatGPT and Cursor.
+</p>
+
+<p align="center">
+  <a href="https://unlimitedmessaging.app?utm_source=github&utm_medium=readme&utm_campaign=unlimited-messaging-android"><img alt="Website" src="https://img.shields.io/badge/Website-0D1F16?style=flat-square"></a>
+  <a href="https://app.unlimitedmessaging.app?utm_source=github&utm_medium=readme&utm_campaign=unlimited-messaging-android"><img alt="App" src="https://img.shields.io/badge/App-075E54?style=flat-square"></a>
+  <a href="https://docs.unlimitedmessaging.app"><img alt="Docs" src="https://img.shields.io/badge/Docs-128C7E?style=flat-square"></a>
+  <a href="https://unlimitedmessaging.app/mcp?utm_source=github&utm_medium=readme&utm_campaign=unlimited-messaging-android"><img alt="MCP" src="https://img.shields.io/badge/MCP-128C7E?style=flat-square"></a>
+  <a href="https://unlimitedmessaging.app/pricing?utm_source=github&utm_medium=readme&utm_campaign=unlimited-messaging-android"><img alt="Pricing" src="https://img.shields.io/badge/Pricing-128C7E?style=flat-square"></a>
+  <a href="https://www.npmjs.com/package/@unlimited-messaging/sdk"><img alt="npm" src="https://img.shields.io/badge/npm-cb0000?style=flat-square&logo=npm&logoColor=white"></a>
+  <a href="https://pypi.org/project/unlimited-messaging"><img alt="PyPI" src="https://img.shields.io/badge/PyPI-3775a9?style=flat-square&logo=pypi&logoColor=white"></a>
+  <a href="https://discord.gg/danrEJV5Xx"><img alt="Discord" src="https://img.shields.io/badge/Discord-5865F2?style=flat-square&logo=discord&logoColor=white"></a>
+  <a href="https://x.com/unlimitedmess"><img alt="X" src="https://img.shields.io/badge/X-000000?style=flat-square&logo=x&logoColor=white"></a>
+</p>
+
+**Unlimited Messaging projects**
+
+| Project | What it is |
+| --- | --- |
+| [unlimited-messaging-mcp](https://github.com/UnlimitedMessaging/unlimited-messaging-mcp) | Hosted MCP server for Claude, ChatGPT, Cursor and any MCP client: setup guide and ready-to-paste configs |
+| [unlimited-messaging-sdk](https://github.com/UnlimitedMessaging/unlimited-messaging-sdk) | OpenAPI spec, official TypeScript and Python SDKs, and the n8n node source |
+| **[unlimited-messaging-android](https://github.com/UnlimitedMessaging/unlimited-messaging-android)** (this repo) | Open source Android app: send and receive SMS from your own phone and SIM |
+| [n8n-nodes-unlimited-messaging](https://www.npmjs.com/package/n8n-nodes-unlimited-messaging) | n8n community node for WhatsApp, email and SMS workflows, no code |
+| [unlimitedmessaging.app](https://unlimitedmessaging.app?utm_source=github&utm_medium=readme&utm_campaign=unlimited-messaging-android) | Website, web app, pricing and guides |
+
+<!-- um-header:end -->
+
+
+<h2 align="center">Unlimited Messaging for Android</h2>
 
 <p align="center">
   <b>Send and receive SMS from your own phone, through an API.</b><br>
@@ -23,7 +60,8 @@
 ## What it is for
 
 Messages you queue with the Unlimited Messaging API, the dashboard, the SDKs or
-the MCP server (Claude, ChatGPT, Cursor...) are sent **as SMS from your phone's
+the [MCP server](https://github.com/UnlimitedMessaging/unlimited-messaging-mcp)
+(`https://mcp.unlimitedmessaging.app`, for Claude, ChatGPT, Cursor...) are sent **as SMS from your phone's
 SIM card**, on your own plan, and the SMS your phone receives come back to your
 account and your webhooks.
 
