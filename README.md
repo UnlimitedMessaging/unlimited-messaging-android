@@ -76,7 +76,9 @@ account and your webhooks.
 - **Sign in like on the website.** Email and password, magic link, Google or
   GitHub, on the website's own page: the app never sees your password.
 - **No Google services required.** No Firebase, no Play Services, no
-  analytics, no tracking, no ads.
+  third-party analytics or SDK, no ads. The app sends a few usage and
+  diagnostic events to Unlimited Messaging's own server, never your messages
+  or numbers, and one switch turns them off (see [Privacy](#privacy)).
 - **Open source**, so you can check exactly what an app holding SMS
   permissions does with them.
 
@@ -185,14 +187,48 @@ What leaves the phone, and only towards the Unlimited Messaging API:
 - the device's model and name, and the app version;
 - for each SIM: carrier name, slot, country and, when available, number;
 - the result of each message the gateway sends;
-- the SMS received **after you sign in** (sender, text, time).
+- the SMS received **after you sign in** (sender, text, time);
+- unless you turn it off, a few usage and diagnostic events (below).
 
 What stays on the phone: the session (encrypted with a key held by the Android
 Keystore) and the list of the last 200 messages the gateway handled, shown on
 the home screen. Both are deleted when you sign out. Backups are disabled.
 
-Nothing else: no analytics, no crash reporting service, no ads, no
-third-party SDK.
+### Usage and diagnostic events
+
+No third-party analytics, crash reporting service or SDK. The app sends a few
+events to Unlimited Messaging's own server (`POST /device/events`), to analyse
+how the product is used and to detect problems and outages: phones that cannot
+finish setup, a gateway Android refuses to start, connection drops, crashes.
+They are tied to your account like everything else the gateway sends, and the
+server adds the phone's model, Android version and app version from the
+registration above. Their content is limited to what is listed here: never a
+phone number, SIM or carrier name, the phone's name, message text, contact,
+error message, token or URL.
+
+Events are only recorded while you are signed in. They wait in a small queue
+on the phone (at most 100, none older than 7 days) and are sent in the
+background.
+
+| Event | When | Fields |
+| --- | --- | --- |
+| `android_app_opened` | The app comes to the foreground, at most once every 30 minutes. | `signed_in`, `gateway_enabled` (true/false), `connection` (`stopped`, `connecting`, `online` or `offline`), `setup_complete` (true/false) |
+| `android_permission_result` | You answer a permission request. | `group` (`sms`, `phone_numbers` or `notifications`), `granted`, `permanently_denied` (true/false) |
+| `android_setup_step_completed` | A setup step becomes done, including from system settings. | `step` (`sms`, `battery`, `notifications` or `phone_numbers`) |
+| `android_setup_step_revoked` | A setup step that was done no longer is. | `step` (same values) |
+| `android_setup_completed` | Every setup step is done, the first time. | `minutes_since_sign_in` (a number, or null) |
+| `android_service_start_blocked` | Android refuses to start the gateway in the background. | `trigger` (`ui`, `boot`, `watchdog` or `sign_in`), `background_restricted` (true/false) |
+| `android_gateway_offline_episode` | The gateway reaches the server again after failing to. One event per outage, not per retry. | `duration_s` (seconds), `error_class` (the error's class name only, e.g. `UnknownHostException`), `attempts` |
+| `android_crash` | The app crashed; sent on the next launch. | `exception_class` (class name only, e.g. `IllegalStateException`), `app_frames` (up to 5 places in the app's own code, as `Class#method`), `in_service` (true/false) |
+
+Each event also carries the time it happened and a random id, so a resent
+batch is not counted twice.
+
+**Turning it off:** switch off **Share usage statistics** on the home screen.
+The queue on the phone is emptied right away, nothing more is recorded, and the
+server is told on the next registration. To build an app without any of it,
+pass `-Pum.telemetryEnabled=false` to Gradle (see [Build from source](#build-from-source)):
+nothing is recorded or sent, and the switch is hidden.
 
 ## Verify the APK
 
@@ -216,6 +252,8 @@ cd unlimited-messaging-android
 ```
 
 Requires JDK 17+ and the Android SDK (platform 35).
+`./gradlew assembleDebug -Pum.telemetryEnabled=false` builds it without the
+usage and diagnostic events described in [Privacy](#privacy).
 [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) explains how to run it against a
 local backend and how to test SMS on the emulator.
 

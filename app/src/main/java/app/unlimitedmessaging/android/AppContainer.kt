@@ -1,6 +1,7 @@
 package app.unlimitedmessaging.android
 
 import android.content.Context
+import app.unlimitedmessaging.android.analytics.Telemetry
 import app.unlimitedmessaging.android.api.ApiClient
 import app.unlimitedmessaging.android.api.DeviceApi
 import app.unlimitedmessaging.android.auth.AuthRepository
@@ -47,6 +48,8 @@ class AppContainer(context: Context) {
     val deviceApi = DeviceApi(apiClient)
 
     val smsSender = SmsSender(appContext, simInventory, sendTracker, activityLog)
+
+    val telemetry = Telemetry(appContext, preferences, auth, appScope, enabledInBuild = BuildConfig.TELEMETRY_ENABLED)
 }
 
 /** The process-wide [AppContainer], from any [Context]. */

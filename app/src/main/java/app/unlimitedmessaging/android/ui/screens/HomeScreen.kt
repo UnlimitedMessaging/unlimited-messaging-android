@@ -46,6 +46,7 @@ import app.unlimitedmessaging.android.ui.theme.UmColors
 /** Everything the home screen can ask for, implemented by the activity. */
 data class HomeActions(
     val setGatewayEnabled: (Boolean) -> Unit,
+    val setTelemetryEnabled: (Boolean) -> Unit,
     val grantSms: () -> Unit,
     val grantPhoneNumbers: () -> Unit,
     val grantNotifications: () -> Unit,
@@ -72,6 +73,7 @@ fun HomeScreen(state: UiState, deviceName: String, versionName: String, actions:
             item { SimsCard(state) }
             item { ActivityCard(state) }
             if (state.setup.allDone) item { SetupCard(state, actions) }
+            state.telemetryEnabled?.let { enabled -> item { TelemetryCard(enabled, actions.setTelemetryEnabled) } }
             item {
                 Spacer(Modifier.height(4.dp))
                 UmSecondaryButton(onClick = actions.signOut, modifier = Modifier.fillMaxWidth()) {
@@ -113,16 +115,7 @@ private fun GatewayCard(state: UiState, deviceName: String, setEnabled: (Boolean
                 Spacer(Modifier.height(2.dp))
                 Text(deviceName, style = MaterialTheme.typography.bodySmall, color = LocalUmColors.current.muted)
             }
-            Switch(
-                checked = state.gatewayEnabled,
-                onCheckedChange = setEnabled,
-                colors = SwitchDefaults.colors(
-                    checkedTrackColor = MaterialTheme.colorScheme.primary,
-                    checkedThumbColor = MaterialTheme.colorScheme.onPrimary,
-                    uncheckedTrackColor = MaterialTheme.colorScheme.surfaceVariant,
-                    uncheckedBorderColor = MaterialTheme.colorScheme.outline,
-                ),
-            )
+            UmSwitch(checked = state.gatewayEnabled, onCheckedChange = setEnabled)
         }
         Spacer(Modifier.height(14.dp))
         Surface(color = MaterialTheme.colorScheme.secondaryContainer, shape = MaterialTheme.shapes.small) {
@@ -137,6 +130,36 @@ private fun GatewayCard(state: UiState, deviceName: String, setEnabled: (Boolean
                 Spacer(Modifier.height(8.dp))
                 Text(it, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.error)
             }
+        }
+    }
+}
+
+@Composable
+private fun UmSwitch(checked: Boolean, onCheckedChange: (Boolean) -> Unit) {
+    Switch(
+        checked = checked,
+        onCheckedChange = onCheckedChange,
+        colors = SwitchDefaults.colors(
+            checkedTrackColor = MaterialTheme.colorScheme.primary,
+            checkedThumbColor = MaterialTheme.colorScheme.onPrimary,
+            uncheckedTrackColor = MaterialTheme.colorScheme.surfaceVariant,
+            uncheckedBorderColor = MaterialTheme.colorScheme.outline,
+        ),
+    )
+}
+
+/** "Share usage statistics". Hidden on builds made without telemetry. */
+@Composable
+private fun TelemetryCard(enabled: Boolean, setEnabled: (Boolean) -> Unit) {
+    UmCard {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Column(Modifier.weight(1f)) {
+                Text(stringResource(R.string.telemetry_title), style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurface)
+                Spacer(Modifier.height(2.dp))
+                Text(stringResource(R.string.telemetry_detail), style = MaterialTheme.typography.bodySmall, color = LocalUmColors.current.muted)
+            }
+            Spacer(Modifier.width(12.dp))
+            UmSwitch(checked = enabled, onCheckedChange = setEnabled)
         }
     }
 }

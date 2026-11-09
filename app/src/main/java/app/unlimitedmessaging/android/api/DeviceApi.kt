@@ -40,6 +40,16 @@ class DeviceApi(private val client: ApiClient) {
         client.post<InboundSms, Unit>("/device/inbound", sms, InboundSms.serializer(), response = null)
     }
 
+    /** Usage and diagnostic events, see [app.unlimitedmessaging.android.analytics.Telemetry]. */
+    suspend fun sendEvents(events: List<DeviceEvent>) {
+        client.post<DeviceEventsRequest, Unit>(
+            "/device/events",
+            DeviceEventsRequest(events),
+            DeviceEventsRequest.serializer(),
+            response = null,
+        )
+    }
+
     /** Removes this device and deactivates its accounts (sign-out). */
     suspend fun unregister() {
         client.delete("/device")

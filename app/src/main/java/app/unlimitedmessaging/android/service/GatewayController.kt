@@ -1,11 +1,13 @@
 package app.unlimitedmessaging.android.service
 
+import android.app.ActivityManager
 import android.app.ForegroundServiceStartNotAllowedException
 import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.util.Log
 import androidx.core.content.ContextCompat
+import app.unlimitedmessaging.android.analytics.StartTrigger
 import app.unlimitedmessaging.android.container
 import app.unlimitedmessaging.android.system.Permissions
 import kotlinx.coroutines.withTimeoutOrNull
@@ -26,8 +28,12 @@ object GatewayController {
             Permissions.allGranted(context, Permissions.SMS)
     }
 
-    /** Starts the service if it should run and does not, stops it if it should not. */
-    fun ensureRunning(context: Context) {
+    /**
+     * Starts the service if it should run and does not, stops it if it should not.
+     *
+     * @param trigger where the call comes from, reported when Android refuses the start.
+     */
+    fun ensureRunning(context: Context, trigger: StartTrigger) {
         if (!shouldRun(context)) {
             if (GatewayService.isRunning) stop(context)
             return
@@ -44,8 +50,14 @@ object GatewayController {
                 e is ForegroundServiceStartNotAllowedException
             Log.w(TAG, "Could not start the gateway service (background start refused: $notAllowed)", e)
             GatewayNotifications.showRestartNeeded(context)
+            context.container.telemetry.serviceStartBlocked(trigger, isBackgroundRestricted(context))
         }
     }
+
+    /** "Restricted" background usage in the app's battery settings (Android 9+). */
+    private fun isBackgroundRestricted(context: Context): Boolean =
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.P &&
+            runCatching { context.getSystemService(ActivityManager::class.java).isBackgroundRestricted }.getOrDefault(false)
 
     /** Asks a running gateway to register again (SIMs or permissions changed). */
     fun refreshRegistration(context: Context) {
@@ -78,6 +90,8 @@ object GatewayController {
                 .onFailure { Log.w(TAG, "Could not unregister the device", it) }
         }
         container.auth.signOut()
+        container.telemetry.clear()
+        container.preferences.signedInAt = null
         container.activityLog.clear()
         container.gatewayStatus.reset()
     }

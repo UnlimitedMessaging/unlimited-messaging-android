@@ -59,6 +59,9 @@
     <string name="status_received">Reçu</string>
     <string name="status_forwarded">Transmis</string>
 
+    <string name="telemetry_title">Partager les statistiques d\'utilisation</string>
+    <string name="telemetry_detail">Quelques événements (ouvertures de l\'app, étapes de configuration, problèmes de connexion, plantages) envoyés à Unlimited Messaging pour améliorer l\'app et repérer les pannes. Jamais vos messages, numéros ou contacts.</string>
+
     <string name="sign_out">Se déconnecter</string>
     <string name="version">Version %1$s</string>
 
