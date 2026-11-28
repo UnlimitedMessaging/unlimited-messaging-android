@@ -27,9 +27,9 @@
 | Project | What it is |
 | --- | --- |
 | [unlimited-messaging-mcp](https://github.com/UnlimitedMessaging/unlimited-messaging-mcp) | Hosted MCP server for Claude, ChatGPT, Cursor and any MCP client: setup guide and ready-to-paste configs |
-| [unlimited-messaging-sdk](https://github.com/UnlimitedMessaging/unlimited-messaging-sdk) | OpenAPI spec, official TypeScript and Python SDKs, and the n8n node source |
+| [unlimited-messaging-sdk](https://github.com/UnlimitedMessaging/unlimited-messaging-sdk) | OpenAPI spec, official TypeScript and Python SDKs, and the WordPress plugin source |
 | **[unlimited-messaging-android](https://github.com/UnlimitedMessaging/unlimited-messaging-android)** (this repo) | Open source Android app: send and receive SMS from your own phone and SIM |
-| [n8n-nodes-unlimited-messaging](https://www.npmjs.com/package/n8n-nodes-unlimited-messaging) | n8n community node for WhatsApp, email and SMS workflows, no code |
+| [n8n-nodes-unlimited-messaging](https://github.com/UnlimitedMessaging/n8n-nodes-unlimited-messaging) | n8n community node for WhatsApp, email and SMS workflows, no code |
 | [unlimitedmessaging.app](https://unlimitedmessaging.app?utm_source=github&utm_medium=readme&utm_campaign=unlimited-messaging-android) | Website, web app, pricing and guides |
 
 <!-- um-header:end -->
